@@ -81,11 +81,6 @@ func GetSleepingAverage(client pb.SleepTrackerServiceClient) {
 	fmt.Println("You slept an average of " + fmt.Sprint(ave) + " hours per night.")
 
 }
-func PrintSleepingLog(client pb.SleepTrackerServiceClient) {
-	var user string
-	fmt.Print("User: ")
-	fmt.Scan(&user)
-}
 
 func main() {
 	conn, err := grpc.Dial(*serverAddr, grpc.WithInsecure())
@@ -101,8 +96,7 @@ func main() {
 		fmt.Println("Select an option below:")
 		fmt.Println("(1) Enter hours slept")
 		fmt.Println("(2) Get average hours slept")
-		fmt.Println("(3) Print sleeping log")
-		fmt.Println("(4) Quit")
+		fmt.Println("(3) Quit")
 		fmt.Print("Enter option: ")
 
 		var i int
@@ -113,7 +107,7 @@ func main() {
 		case 2:
 			GetSleepingAverage(client)
 		case 3:
-			PrintSleepingLog(client)
+			return
 		}
 	}
 }

@@ -24,6 +24,7 @@ var (
 )
 
 func (s *server) Get(ctx context.Context, in *pb.GetRequest) (*pb.ServerResponse, error) {
+	// Key is in the format user:start_date:end_Date
 	var err error
 	var value string
 
@@ -45,7 +46,7 @@ func (s *server) Get(ctx context.Context, in *pb.GetRequest) (*pb.ServerResponse
 	end_date := strings.Split(key[2], "/")
 	total_hours := 0.0
 
-	log.Println("Getting " + user + ":" + key[1] + key[2])
+	log.Println("Getting " + user + ":" + key[1] + ":" + key[2])
 	// We assume the dates are within the same month
 	init_day, err = strconv.Atoi(start_date[1])
 	if err != nil {
@@ -53,8 +54,13 @@ func (s *server) Get(ctx context.Context, in *pb.GetRequest) (*pb.ServerResponse
 	}
 	end_day, err = strconv.Atoi(end_date[1])
 	for i := init_day; i <= end_day; i++ {
-		key := user + ":" + start_date[0] + "/" + strconv.Itoa(i) + "/" + start_date[2]
+		day := strconv.Itoa(i)
+		if i < 10 {
+			day = "0" + day
+		}
+		key := user + ":" + start_date[0] + "/" + day + "/" + start_date[2]
 		value = db[key]
+		log.Println("db[" + key + "] = " + value)
 		f, err = strconv.ParseFloat(value, 64)
 		total_hours += f
 	}
